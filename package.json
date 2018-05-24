@@ -17,6 +17,8 @@
   },
   "eslintConfig": {
     "extends": "exponent/react",
-    "rules": { "semi": "off" }
+    "rules": {
+      "semi": "off"
+    }
   }
 }
