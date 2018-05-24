@@ -12,14 +12,24 @@ export default class App extends React.Component {
 				null,
 				{ dx: this.pan.x, dy: this.pan.y },
 			]),
-			onPanResponderRelease: (e, getsure) => {},
+			onPanResponderRelease: () => {
+				Animated.spring(this.pan, {
+					toValue: { x: 0, y: 0 },
+					friction: 4.5,
+				}).start();
+			},
 		});;
 	}
 	render() {
+		const rotateCard = this.pan.x.interpolate({
+			inputRange: [-200, 0, 200],
+			outputRange: ['-10deg', '0deg', '10deg'],
+		});
 		const animatedStyle = {
 			transform: [
 				{ translateX: this.pan.x },
-				{ translateY: this.pan.y }
+				{ translateY: this.pan.y },
+				{ rotate: rotateCard },
 			],
 		};
 		return (
