@@ -1,8 +1,17 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, PanResponder, Animated, Dimensions } from 'react-native';
+import {
+	StyleSheet,
+	Text,
+	View,
+	Image,
+	PanResponder,
+	Animated,
+	Dimensions,
+} from 'react-native';
+import moment from 'moment';
 
 const { width, height } = Dimensions.get('window');
-const fbImage = 'https://graph.facebook.com/259389830744794/picture?height=500'
+const fbImage = 'https://graph.facebook.com/259389830744794/picture?height=500';
 
 export default class Card extends React.Component {
 	componentWillMount() {
@@ -23,14 +32,20 @@ export default class Card extends React.Component {
 					}).start();
 				} else {
 					Animated.spring(this.pan, {
-            toValue: {x:0, y:0},
-            friction: 4.5,
-          }).start();
+						toValue: { x: 0, y: 0 },
+						friction: 4.5,
+					}).start();
 				}
 			},
-		});;
+		});
 	}
 	render() {
+		const { birthday, name, bio, id } = this.props.profile;
+		console.log(name);
+		const profileBday = moment(birthday, 'MM/DD/YYYY');
+		const profileAge = moment().diff(profileBday, 'years');
+		const fbImage = `https://graph.facebook.com/${id}/picture?height=500`;
+
 		const rotateCard = this.pan.x.interpolate({
 			inputRange: [-200, 0, 200],
 			outputRange: ['10deg', '0deg', '-10deg'],
@@ -47,13 +62,12 @@ export default class Card extends React.Component {
 				{...this.cardPanResponder.panHandlers}
 				style={[styles.card, animatedStyle]}
 			>
-				<Image
-					style={{ flex: 1 }}
-					source={{ uri: fbImage }}
-				/>
+				<Image style={{ flex: 1 }} source={{ uri: fbImage }} />
 				<View style={{ margin: 20 }}>
-					<Text style={{ fontSize: 20 }}>Candice, 28</Text>
-					<Text style={{ fontSize: 15, color: 'darkgrey' }}>Supermodel</Text>
+					<Text style={{ fontSize: 20 }}>
+						{name}, {profileAge}
+					</Text>
+					<Text style={{ fontSize: 15, color: 'darkgrey' }}>{bio}</Text>
 				</View>
 			</Animated.View>
 		);
@@ -62,14 +76,15 @@ export default class Card extends React.Component {
 
 const styles = StyleSheet.create({
 	card: {
-    position: 'absolute',
-    width: width - 20,
-    height: height * 0.7,
-    top: (height * 0.3) / 2,
+		position: 'absolute',
+		width: width - 20,
+		height: height * 0.7,
+		top: height * 0.3 / 2,
 		overflow: 'hidden',
 		margin: 10,
 		borderWidth: 1,
 		borderColor: 'lightgrey',
 		borderRadius: 8,
+		backgroundColor: 'white',
 	},
 });
